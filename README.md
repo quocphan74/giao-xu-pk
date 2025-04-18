@@ -34,3 +34,49 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+
+
+
+// Next.js 14 project structure for Parish Website
+// Uses App Router (Next.js 13+), Tailwind CSS, Prisma (optional), Typescript
+
+// Project folder structure
+/
+├── app/                        // App Router root
+│   ├── layout.tsx             // Global layout
+│   ├── page.tsx               // Home page
+│   ├── gioi-thieu/            // About section
+│   │   ├── page.tsx          // Giới thiệu chung
+│   │   ├── lich-su/          // Lịch sử giáo xứ
+│   │   ├── linh-muc/         // Linh mục chánh xứ, phụ tá
+│   │   └── hoi-doan/         // Ban hành giáo & các hội đoàn
+│   ├── tin-tuc/              // Tin tức và thông báo
+│   ├── lich-le/              // Lịch lễ và sự kiện
+│   ├── thu-vien/             // Thư viện hình ảnh/video
+│   ├── bai-giang/            // Bài giảng/Lời Chúa
+│   └── lien-he/              // Trang liên hệ
+│
+├── components/               // Reusable UI components
+│   ├── Navbar.tsx
+│   ├── Footer.tsx
+│   ├── Card.tsx
+│   ├── NewsItem.tsx
+│   └── EventCard.tsx
+│
+├── lib/                      // Helper functions or API utilities
+│   └── fetchers.ts           // Fetching data from backend / API
+│
+├── public/                   // Static files (images, etc.)
+│
+├── styles/                   // Global styles
+│   └── globals.css
+│
+├── prisma/                   // Prisma schema if using DB
+│   └── schema.prisma
+│
+├── .env                      // Environment variables
+├── tailwind.config.ts
+├── tsconfig.json
+├── next.config.js
+└── package.json
