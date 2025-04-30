@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "@/styles/globals.css";
 import Header from "@/components/Header";
-import CustomCarousel from "@/components/Carousel";
 import Footer from "@/components/Footer";
 
 const geistSans = Geist({
@@ -30,8 +29,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Header/>
-        <CustomCarousel/>
+         <Header/>
         {children}
         <Footer />
       </body>
