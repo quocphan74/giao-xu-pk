@@ -33,8 +33,8 @@ export default function SermonDetail({ params }: { params: Promise<{ id: string 
                             className="rounded-lg"
                         />
                     </div>
-                    {data?.sections.map((article) => (
-                        <section className="mb-6">
+                    {data?.sections.map((article, index) => (
+                        <section key={index} className="mb-6">
                             <h3 className="text-xl font-semibold mb-2 flex items-center">
                                 {article.section_order} {article.title}
                             </h3>

@@ -1,6 +1,6 @@
-import { News } from "@/data/data";
 import Link from "next/link";
 import Image from 'next/image';
+import { News } from "@/utils/interface";
 
 const SidebarNews: React.FC<News> = ({ id, title, date, content }) => {
     const firstText = content.find(item => item.type === 'text')?.value || '';

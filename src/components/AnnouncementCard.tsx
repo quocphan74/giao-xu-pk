@@ -1,8 +1,8 @@
+import { Announcement } from '@/utils/interface';
 import React from 'react';
-import { Announcement } from '../data/data';
 
 const AnnouncementCard: React.FC<Announcement> = ({ title, description, date }) => (
-  <div className="bg-white rounded-lg shadow-sm p-4 hover:shadow-md transition-shadow">
+  <div className="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow mb-2">
     <div className="flex items-center">
       <span className="inline-block bg-blue-100 text-blue-800 text-xs font-semibold px-2 py-1 rounded mr-2">Mới</span>
       <h3 className="text-md font-semibold line-clamp-1">{title}</h3>

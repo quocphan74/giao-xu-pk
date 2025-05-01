@@ -1,10 +1,10 @@
 import React from 'react';
-import { Sermon } from '../data/data';
 import Image from 'next/image';
 import Link from 'next/link';
+import { Sermon } from '@/utils/interface';
 const SermonCard: React.FC<Sermon> = ({ id, title, description, date, image }) => {
     return (
-      <div className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow p-4">
+      <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow p-4">
             <div className="flex flex-col sm:flex-row">
                 <Image
                     src={image.url}
