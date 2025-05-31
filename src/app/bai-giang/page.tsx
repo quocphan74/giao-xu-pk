@@ -1,50 +1,52 @@
-"use client";
-import { useState, useEffect } from 'react';
-import { sermonsData } from '../../data/data';
-import { CardProps, Sermon } from '@/utils/interface';
-import Card from '@/components/Card';
-import { SEEALLTEXT } from '@/constants/constants';
 
-// Main NewsListPage Component
-const SermonListPage: React.FC = () => {
+"use client";
+import { LISTNUMBER, LISTTITLE, SEEALLTEXT } from '@/constants/constants';
+import { Sermon } from '@/types/sermon';
+import { CardProps } from '@/types/cardProps';
+import SkeletonCard from '@/components/keletonCard';
+import Card from '@/components/Card';
+import SidebarSermonClient from '@/components/SidebarSermonClient';
+import { useCallback, useEffect, useState } from 'react';
+import Pagination from '@/components/Pagination';
+import useSermons from '@/hooks/useSermons';
+import React from 'react';
+const MemoizedCard = React.memo(Card);
+export default function SermonListPage() {
     const [page, setPage] = useState(1);
-    const sermonToCardProps = ({ id, title, date, description, image }: Sermon): CardProps => ({
-        id,
-        title,
-        date,
-        text: description,
-        image: { src: image.url, alt: image.alt_text },
-        linkPath: SEEALLTEXT.SERMON.url,
-      });
-    
-      const sermonCards: CardProps[] = sermonsData.map(sermonToCardProps);
+    const { sermons, sermonsTotalPages, sermonLoading, sermonError } = useSermons(page);
+    const mapSermonToCardProps =  useCallback((sermon: Sermon): CardProps => ({
+        id: sermon.id,
+        title: sermon.title,
+        date: sermon.created_at || '',
+        text: sermon.sermon_blocks?.[0]?.content || '',
+        image: sermon.sermon_blocks?.[0]?.sermon_block_images
+            ?.map(img => img.image)
+            .filter((img) => !!img),
+        linkPath: SEEALLTEXT.SERMON.url
+    }),[]);
     return (
         <div className="container mx-auto px-4 py-8 flex">
-            <div className="flex flex-col lg:flex-row gap-6">
-                {/* Main News List */}
-                <div className="space-y-6">
-                    <h1 className="text-2xl font-bold mb-4 text-blue-600 clim">Bài giảng mới / Lời Chúa hàng tuần</h1>
+            <div className="flex flex-col lg:flex-row gap-6 w-full">
+                {/* Main Sermon List */}
+                <div className="lg:w-2/3 space-y-6">
+                    <h1 className="text-2xl font-bold mb-4 text-blue-600">{LISTTITLE.SERMON}</h1>
                     <div className="space-y-4 mt-2">
-                        {sermonCards.map((sermon) => (
-                            <Card key={sermon.id} {...sermon} />
-                        ))}
+                        {sermonLoading ? (
+                            Array.from({ length: LISTNUMBER.COUNT_LOADER }).map((_, idx) => <SkeletonCard key={idx} />)
+                        ) : (
+                            sermons.map((sermon) => <MemoizedCard key={sermon.id} {...mapSermonToCardProps(sermon)} />)
+                        )}
                     </div>
                     {/* Pagination */}
-                    <div className="flex justify-center mt-8">
-                        {[1, 2, 3, 4, 5].map((num) => (
-                            <button
-                                key={num}
-                                onClick={() => setPage(num)}
-                                className={`mx-1 px-3 py-1 rounded ${page === num ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
-                            >
-                                {num}
-                            </button>
-                        ))}
-                    </div>
+                    <Pagination
+                        currentPage={page}
+                        totalPages={sermonsTotalPages}
+                        onPageChange={(page) => setPage(page)}
+                    />
                 </div>
+                {/* Sidebar */}
+                <SidebarSermonClient />
             </div>
-        </div >
+        </div>
     );
 };
-
-export default SermonListPage;

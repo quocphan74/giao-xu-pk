@@ -1,6 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
-import { Media } from '../data/data';
+import { Media } from '@/utils/interface';
 
 const MediaCard: React.FC<Media> = ({ type, url, title }) => (
     <div className="relative">

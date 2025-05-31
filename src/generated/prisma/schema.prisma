@@ -1,0 +1,102 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// News
+model News {
+  id           BigInt      @id @default(autoincrement())
+  title        String?
+  is_published Boolean
+  created_at   DateTime    @default(now())
+  updated_at   DateTime    @updatedAt
+  deleted_at   DateTime?
+  news_blocks  NewsBlock[]
+
+  @@map("news")
+}
+
+model NewsBlock {
+  id                BigInt           @id @default(autoincrement())
+  news_id           BigInt
+  title             String?
+  content           String?
+  order             BigInt
+  news              News             @relation(fields: [news_id], references: [id])
+  news_block_images NewsBlockImage[]
+
+  @@map("news_blocks")
+}
+
+model NewsBlockImage {
+  id            BigInt    @id @default(autoincrement())
+  news_block_id BigInt
+  image_id      BigInt
+  order         BigInt
+  news_block    NewsBlock @relation(fields: [news_block_id], references: [id])
+  image         Image     @relation(fields: [image_id], references: [id])
+
+  @@map("news_block_images")
+}
+
+model Image {
+  id                 BigInt             @id @default(autoincrement())
+  url                String
+  alt                String
+  created_at         DateTime           @default(now())
+  updated_at         DateTime           @updatedAt
+  deleted_at         DateTime?
+  // This relation is required by Prisma to avoid validation error.
+  // We DO NOT use this field in application code.
+  NewsBlockImages    NewsBlockImage[]
+  SermonsBlockImages SermonBlockImage[]
+
+  @@map("images")
+}
+
+// Sermons
+model Sermon {
+  id            BigInt        @id @default(autoincrement())
+  title         String?
+  preacher_name String?
+  created_at    DateTime
+  updated_at    DateTime
+  deleted_at    DateTime?
+  sermon_blocks SermonBlock[]
+
+  @@map("sermons")
+}
+
+model SermonBlock {
+  id                  BigInt             @id @default(autoincrement())
+  sermon_id           BigInt
+  title               String?
+  content             String?
+  order               BigInt
+  sermon              Sermon             @relation(fields: [sermon_id], references: [id])
+  sermon_block_images SermonBlockImage[]
+
+  @@map("sermon_blocks")
+}
+
+model SermonBlockImage {
+  id              BigInt      @id @default(autoincrement())
+  sermon_block_id BigInt
+  image_id        BigInt
+  order           BigInt
+  sermon_block    SermonBlock @relation(fields: [sermon_block_id], references: [id])
+  image           Image       @relation(fields: [image_id], references: [id])
+
+  @@map("sermon_block_images")
+}

@@ -10,6 +10,17 @@ export const TITLESECTION = {
     NEWS: "Tin tức",
     SERMON: "Bài giảng mới / Lời Chúa hàng tuần",
     NOTIFY: "Thông báo",
-    EVENT: "Lịch lễ & Sự kiện sắp tới",
+    EVENT: "Lịch lễ",
     MEDIA: "Thư viện hình ảnh/video mới nhất"
+}
+
+export const LISTNUMBER = {
+    COUNT_LOADER : 5
+}
+
+export const LISTTITLE = {
+    NEWS: "Tin Tức - Tổng Giáo Phận Huế",
+    RECOMMENT_NEWS: "Tin Bài Mới Nhất",
+    SERMON: "Bài Giảng",
+    RECOMMENT_SERMON: "Bài Giảng Mới Nhất"
 }

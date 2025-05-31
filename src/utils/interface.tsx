@@ -1,8 +1,9 @@
+import { Image } from "@/types/image";
+
 interface ContentItem {
     type: 'text' | 'image';
-    value?: string; // For type 'text'
-    src?: string;   // For type 'image'
-    alt?: string;   // For type 'image'
+    value?: string;
+    image?: Image[];
 }
 
 export interface News {
@@ -13,44 +14,38 @@ export interface News {
 }
 
 interface Author {
-    author_id: number;
+    id: number;
     name: string;
 }
-interface Image {
-    image_id: number;
-    url: string;
-    alt_text: string;
-}
+// interface Image {
+//     id: number;
+//     url?: string;
+//     alt?: string;
+// }
 interface ArticleSection {
-    section_id: number;
-    article_id: number;
+    id: number;
     title: string;
     content: string;
     section_order: number;
-    image: Image;
+    image?: Image[];
 }
 export interface Sermon {
     id: number;
     title: string;
     date: string;
     description: string;
-    image: Image;
+    image?: Image[];
     author: Author;
     sections: ArticleSection[];
 }
 
-export interface Announcement {
+export interface Notification {
     id: number;
     title: string;
     description: string;
     date: string;
-}
-
-export interface Event {
-    id: number;
-    title: string;
-    date: string;
-    time: string;
+    image?: Image[];
+    isNew: boolean;
 }
 
 export interface Media {
@@ -58,13 +53,53 @@ export interface Media {
     type: 'image' | 'video';
     url: string;
     title: string;
+    alt?: string;
 }
 
-export interface CardProps {
+export interface LiturgicalEvent {
     id: number;
-    title: string;
     date: string;
-    text: string;
-    image?: { src: string; alt: string };
-    linkPath: string;
+    title: string;
+    massTimes: string[];
+    liturgicalColor: 'Trắng' | 'Đỏ' | 'Tím' | 'Xanh' | 'Hồng' | 'Vàng';
+    readings: {
+        firstReading: string;
+        psalm?: string;
+        secondReading?: string;
+        gospel: string;
+    };
+    celebrant: string;
+    notes?: string;
+}
+
+
+
+
+interface ImageData {
+    id: string;
+    url: string;
+    alt: string | null;
+    created_at: string;
+    updated_at: string;
+}
+
+interface NewsContentImage {
+    order: number;
+    image: ImageData;
+}
+
+interface NewsContent {
+    id: string;
+    title: string;
+    content: string;
+    order: number;
+    images: NewsContentImage[];
+}
+
+export interface NewsItem {
+    id: string;
+    title: string;
+    created_at: string;
+    updated_at: string;
+    contents: NewsContent[];
 }

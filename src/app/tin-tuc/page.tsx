@@ -1,45 +1,51 @@
 "use client";
-import { useState, useEffect } from 'react';
-import NewsCard from '@/components/NewsCard';
-import { newsData } from '../../data/data';
-import SidebarNews from '@/components/SidebarNews';
-
+import { useState } from 'react';
+import { LISTNUMBER, LISTTITLE, SEEALLTEXT, TITLESECTION } from '@/constants/constants';
+import { News } from '@/types/news';
+import SkeletonCard from '@/components/keletonCard';
+import { CardProps } from '@/types/cardProps';
+import Pagination from '@/components/Pagination';
+import useNews from '@/hooks/useNews';
+import ItemsNews from '@/components/SidebarNewsClient';
+import React from 'react';
+import Card from '@/components/Card';
 // Main NewsListPage Component
 const NewsListPage: React.FC = () => {
     const [page, setPage] = useState(1);
+    const { news, totalPages, loading, error } = useNews(page);
 
+    const mapNewsToCardProps = (news: News): CardProps => ({
+        id: news.id,
+        title: news.title,
+        date: news.created_at || '',
+        text: news.news_blocks?.[0]?.content || '',
+        image: news.news_blocks?.[0]?.news_block_images
+            ?.map(img => img.image)
+            .filter((img) => !!img),
+        linkPath: SEEALLTEXT.NEWS.url
+    });
     return (
         <div className="container mx-auto px-4 py-8 flex">
-            <div className="flex flex-col lg:flex-row gap-6">
+            <div className="flex flex-col lg:flex-row gap-6 w-full">
                 {/* Main News List */}
                 <div className="lg:w-2/3 space-y-6">
-                    <h1 className="text-2xl font-bold mb-4 text-blue-600">Tin Tức - Tổng Giáo Phận Huế</h1>
+                    <h1 className="text-2xl font-bold mb-4 text-blue-600">{LISTTITLE.NEWS}</h1>
                     <div className="space-y-4 mt-2">
-                        {newsData.map((news) => (
-                            <NewsCard key={news.id} {...news} />
-                        ))}
+                        {loading ? (
+                            Array.from({ length: LISTNUMBER.COUNT_LOADER }).map((_, idx) => <SkeletonCard key={idx} />)
+                        ) : (
+                            news.map((news) => <Card key={news.id} {...mapNewsToCardProps(news)} />)
+                        )}
                     </div>
                     {/* Pagination */}
-                    <div className="flex justify-center mt-8">
-                        {[1, 2, 3, 4, 5].map((num) => (
-                            <button
-                                key={num}
-                                onClick={() => setPage(num)}
-                                className={`mx-1 px-3 py-1 rounded ${page === num ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
-                            >
-                                {num}
-                            </button>
-                        ))}
-                    </div>
+                    <Pagination
+                        currentPage={page}
+                        totalPages={totalPages}
+                        onPageChange={(page) => setPage(page)}
+                    />
                 </div>
-
                 {/* Sidebar */}
-                <div className="lg:w-1/3 space-y-6">
-                    <h2 className="text-xl font-bold mb-4 text-blue-600">Tin Bài Mới Nhất</h2>
-                    {newsData.map((news) => (
-                        <SidebarNews key={news.id} {...news} />
-                    ))}
-                </div>
+                <ItemsNews />
             </div>
         </div >
     );
