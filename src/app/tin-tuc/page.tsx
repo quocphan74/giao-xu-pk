@@ -12,18 +12,7 @@ import Card from '@/components/Card';
 // Main NewsListPage Component
 const NewsListPage: React.FC = () => {
     const [page, setPage] = useState(1);
-    const { news, totalPages, loading, error } = useNews(page);
-
-    const mapNewsToCardProps = (news: News): CardProps => ({
-        id: news.id,
-        title: news.title,
-        date: news.created_at || '',
-        text: news.news_blocks?.[0]?.content || '',
-        image: news.news_blocks?.[0]?.news_block_images
-            ?.map(img => img.image)
-            .filter((img) => !!img),
-        linkPath: SEEALLTEXT.NEWS.url
-    });
+    const { data, totalPages, loading, error } = useNews(page);
     return (
         <div className="container mx-auto px-4 py-8 flex">
             <div className="flex flex-col lg:flex-row gap-6 w-full">
@@ -34,7 +23,7 @@ const NewsListPage: React.FC = () => {
                         {loading ? (
                             Array.from({ length: LISTNUMBER.COUNT_LOADER }).map((_, idx) => <SkeletonCard key={idx} />)
                         ) : (
-                            news.map((news) => <Card key={news.id} {...mapNewsToCardProps(news)} />)
+                            data.map((news) => <Card key={news.id} {...news} />)
                         )}
                     </div>
                     {/* Pagination */}

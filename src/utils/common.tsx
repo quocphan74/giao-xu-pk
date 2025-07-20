@@ -41,3 +41,9 @@ export function getFirstImageUrl(images?: Image[]): {id: number; url: string; al
   const img = images[0];
   return img ? { id: img.id ,url: img.url, alt: img.alt } : null;
 }
+
+export function getTimeFromString(dateTimeString: string) {
+  const date = new Date(dateTimeString);
+  return isNaN(date.getTime()) ? "Invalid" : 
+    `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+}

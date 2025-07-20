@@ -177,6 +177,84 @@ exports.Prisma.SermonBlockImageScalarFieldEnum = {
   order: 'order'
 };
 
+exports.Prisma.AnnouncementScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  status: 'status',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  deleted_at: 'deleted_at'
+};
+
+exports.Prisma.AnnouncementBlockScalarFieldEnum = {
+  id: 'id',
+  announcement_id: 'announcement_id',
+  content: 'content',
+  order: 'order'
+};
+
+exports.Prisma.AnnouncementBlockImageScalarFieldEnum = {
+  id: 'id',
+  announcement_block_id: 'announcement_block_id',
+  image_id: 'image_id',
+  order: 'order'
+};
+
+exports.Prisma.ContactScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  email: 'email',
+  phone: 'phone',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  deleted_at: 'deleted_at'
+};
+
+exports.Prisma.MassSchedulesScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  mass_date: 'mass_date',
+  mass_time: 'mass_time',
+  liturgical_color: 'liturgical_color',
+  first_reading: 'first_reading',
+  second_reading: 'second_reading',
+  celebrant: 'celebrant',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  deleted_at: 'deleted_at'
+};
+
+exports.Prisma.UserScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  email: 'email',
+  password: 'password',
+  role_id: 'role_id',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  deleted_at: 'deleted_at'
+};
+
+exports.Prisma.RoleScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  deleted_at: 'deleted_at'
+};
+
+exports.Prisma.GroupScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  member_count: 'member_count',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  deleted_at: 'deleted_at'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -200,7 +278,15 @@ exports.Prisma.ModelName = {
   Image: 'Image',
   Sermon: 'Sermon',
   SermonBlock: 'SermonBlock',
-  SermonBlockImage: 'SermonBlockImage'
+  SermonBlockImage: 'SermonBlockImage',
+  Announcement: 'Announcement',
+  AnnouncementBlock: 'AnnouncementBlock',
+  AnnouncementBlockImage: 'AnnouncementBlockImage',
+  Contact: 'Contact',
+  MassSchedules: 'MassSchedules',
+  User: 'User',
+  Role: 'Role',
+  Group: 'Group'
 };
 
 /**

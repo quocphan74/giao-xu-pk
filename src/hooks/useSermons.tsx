@@ -1,37 +1,20 @@
 
-import { useEffect, useState } from 'react';
 import { Sermon } from '@/types/sermon';
+import { CardProps } from '@/types/cardProps';
+import { SEEALLTEXT } from '@/constants/constants';
+import usePaginatedData from './useFetchResult';
 
-export default function useSermons(page: number, limit = 10) {
-    const [sermons, setSermons] = useState<Sermon[]>([]);
-    const [sermonsTotalPages, setSermonsTotalPages] = useState(1);
-    const [sermonLoading, setSermonLoading] = useState(true);
-    const [sermonError, setSermonError] = useState<string | null>(null);
+export default function useSermons(page: number, limit = 3) {
+        const mappedSermons = (item: Sermon): CardProps => ({
+          id: Number(item.id),
+          title: item.title || "",
+          date: item.created_at ? item.created_at.toString() : "",
+          text: item.sermon_blocks?.[0]?.content || "",
+          image: item.sermon_blocks?.[0]?.sermon_block_images
+            ?.map(img => img.image)
+            .filter((img) => !!img),
+          linkPath: SEEALLTEXT.SERMON.url
+        });
 
-    useEffect(() => {
-        const controller = new AbortController();
-        const signal = controller.signal;
-
-        async function fetchSermons() {
-            setSermonLoading(true);
-            try {
-                const res = await fetch(`/api/sermon?page=${page}&limit=${limit}`,{signal, cache: 'force-cache'});
-                if (!res.ok) throw new Error(`HTTP Error: ${res.status}`);
-                const data = await res.json();
-                setSermons(data.data);
-                setSermonsTotalPages(data.totalPages);
-                setSermonError(null);
-            } catch (err: any) {
-                 if (err.name === 'AbortError') return; // Bỏ qua AbortError
-                setSermonError(err.message || 'Failed to fetch news');
-            } finally {
-                setSermonLoading(false);
-            }
-        }
-
-        fetchSermons();
-        return () => controller.abort();
-    }, [page, limit]);
-
-    return { sermons, sermonsTotalPages, sermonLoading, sermonError };
+  return usePaginatedData<Sermon, CardProps>('/api/sermon', mappedSermons, page, limit);
 }

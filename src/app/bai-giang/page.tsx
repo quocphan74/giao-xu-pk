@@ -13,17 +13,7 @@ import React from 'react';
 const MemoizedCard = React.memo(Card);
 export default function SermonListPage() {
     const [page, setPage] = useState(1);
-    const { sermons, sermonsTotalPages, sermonLoading, sermonError } = useSermons(page);
-    const mapSermonToCardProps =  useCallback((sermon: Sermon): CardProps => ({
-        id: sermon.id,
-        title: sermon.title,
-        date: sermon.created_at || '',
-        text: sermon.sermon_blocks?.[0]?.content || '',
-        image: sermon.sermon_blocks?.[0]?.sermon_block_images
-            ?.map(img => img.image)
-            .filter((img) => !!img),
-        linkPath: SEEALLTEXT.SERMON.url
-    }),[]);
+    const { data,totalPages, loading: sermonLoading } = useSermons(page);
     return (
         <div className="container mx-auto px-4 py-8 flex">
             <div className="flex flex-col lg:flex-row gap-6 w-full">
@@ -34,13 +24,13 @@ export default function SermonListPage() {
                         {sermonLoading ? (
                             Array.from({ length: LISTNUMBER.COUNT_LOADER }).map((_, idx) => <SkeletonCard key={idx} />)
                         ) : (
-                            sermons.map((sermon) => <MemoizedCard key={sermon.id} {...mapSermonToCardProps(sermon)} />)
+                            data.map((sermon) => <MemoizedCard key={sermon.id} {...sermon} />)
                         )}
                     </div>
                     {/* Pagination */}
                     <Pagination
                         currentPage={page}
-                        totalPages={sermonsTotalPages}
+                        totalPages={totalPages}
                         onPageChange={(page) => setPage(page)}
                     />
                 </div>

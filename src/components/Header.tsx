@@ -34,7 +34,6 @@ export default function Header() {
             ],
         },
         { label: 'Tin tức', href: '/tin-tuc' },
-        { label: 'Lịch lễ', href: '/lich-le' },
         { label: 'Thư viện', href: '/thu-vien' },
         { label: 'Bài giảng', href: '/bai-giang' },
         { label: 'Liên hệ', href: '/lien-he' },

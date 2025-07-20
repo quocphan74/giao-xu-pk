@@ -1,7 +1,7 @@
-import { formatDate, getDayOfWeek } from "@/utils/common";
-import { LiturgicalEvent } from "@/utils/interface";
+import { MassSchedule } from "@/types/massSchedule";
+import { formatDate, getDayOfWeek, getTimeFromString } from "@/utils/common";
 interface ModalProps {
-    event: LiturgicalEvent;
+    event: MassSchedule;
     isOpen: boolean;
     onClose: () => void;
   }
@@ -25,32 +25,35 @@ const LiturgicalModal: React.FC<ModalProps> = ({ event, isOpen, onClose }) => {
             </button>
           </div>
           <p className="text-gray-600 text-sm mb-2">
-            <strong>Ngày:</strong> {getDayOfWeek(event.date)} - {formatDate(event.date)}
+            <strong>Ngày:</strong> {getDayOfWeek(event.mass_date)} - {formatDate(event.mass_date)}
           </p>
           <p className="text-gray-600 text-sm mb-2">
             <strong>Giờ lễ:</strong>{' '}
-            {event.massTimes.length > 0 ? event.massTimes.join(', ') : 'Chưa xác định'}
+            {getTimeFromString(event.mass_time)}
           </p>
           <p className="text-gray-600 text-sm mb-2">
-            <strong>Màu phụng vụ:</strong> {event.liturgicalColor}
+            <strong>Màu phụng vụ:</strong> {event.liturgical_color}
           </p>
           <p className="text-gray-600 text-sm mb-2">
             <strong>Bài đọc:</strong>{' '}
-            {[
-              event.readings.firstReading,
-              event.readings.psalm,
-              event.readings.secondReading,
-              event.readings.gospel,
-            ]
-              .filter(Boolean)
-              .join(', ')}
+            {event.first_reading && event.second_reading ? (
+              <>
+                Bài đọc 1: {event.first_reading}, Bài đọc 2: {event.second_reading}
+              </>
+            ) : event.first_reading ? (
+              <>Bài đọc 1: {event.first_reading}</>
+            ) : event.second_reading ? (
+              <>Bài đọc 2: {event.second_reading}</>
+            ) : (
+              'Không có bài đọc'
+            )}
           </p>
           <p className="text-gray-600 text-sm mb-2">
             <strong>Chủ tế:</strong> {event.celebrant}
           </p>
-          {event.notes && (
+          {event.description && (
             <p className="text-gray-600 text-sm mb-2">
-              <strong>Ghi chú:</strong> {event.notes}
+              <strong>Ghi chú:</strong> {event.description}
             </p>
           )}
           <button

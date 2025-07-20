@@ -15,12 +15,12 @@ export async function GET(request: Request) {
       );
     }
 
-    const total = await prisma.sermon.count({
+    const total = await prisma.massSchedules.count({
       where: {
-        deleted_at: null
+        deleted_at: null,
       },
     });
-    const sermons = await prisma.sermon.findMany({
+    const data = await prisma.massSchedules.findMany({
       where: {
         deleted_at: null,
       },
@@ -28,30 +28,17 @@ export async function GET(request: Request) {
       take: limit,
       orderBy: {
         created_at: "desc",
-      },
-      include: {
-        sermon_blocks: {
-          orderBy: { order: 'asc' },
-          include: {
-            sermon_block_images: {
-              orderBy: { order: 'asc' },
-              include: {
-                image: true,
-              },
-            },
-          },
-        },
-      },
+      }
     });
 
-    const data = convertBigIntToString(sermons);
-    
+    const items = convertBigIntToString(data);
+
     return NextResponse.json({
       page,
       limit,
       total,
       totalPages: Math.ceil(total / limit),
-      data: data,
+      data: items,
     });
   } catch (error) {
     console.error("API news error:", error);

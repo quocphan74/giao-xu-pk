@@ -1,40 +1,21 @@
 
-import { useEffect, useState } from 'react';
+
 import { News } from '@/types/news';
+import { CardProps } from '@/types/cardProps';
+import { SEEALLTEXT } from '@/constants/constants';
+import usePaginatedData from './useFetchResult';
 
-export default function useNews(page: number, limit = 10) {
-    const [news, setNews] = useState<News[]>([]);
-    const [totalPages, setTotalPages] = useState(1);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+export default function useNews(page: number, limit = 3) {
+  const mapNews = (item: News): CardProps => ({
+    id: item.id,
+    title: item.title || '',
+    date: item.created_at ? new Date(item.created_at).toLocaleDateString('vi-VN') : '',
+    text: item.news_blocks?.[0]?.content || '',
+    image: item.news_blocks?.[0]?.news_block_images
+            ?.map(img => img.image)
+            .filter((img) => !!img),
+        linkPath: SEEALLTEXT.NEWS.url
+  });
 
-    useEffect(() => {
-        const controller = new AbortController();
-        const signal = controller.signal;
-        async function fetchNews() {
-            setLoading(true);
-            try {
-                const res = await fetch(`/api/news?page=${page}&limit=${limit}`,
-                    {
-                        signal,
-                        cache: 'force-cache',
-                    }
-                );
-                if (!res.ok) throw new Error(`HTTP Error: ${res.status}`);
-                const data = await res.json();
-                setNews(data.data);
-                setTotalPages(data.totalPages);
-                setError(null);
-            } catch (err: any) {
-                if (err.name === 'AbortError') return;
-                setError(err.message || 'Failed to fetch news');
-            } finally {
-                setLoading(false);
-            }
-        }
-        fetchNews();
-        return () => controller.abort();
-    }, [page, limit]);
-
-    return { news, totalPages, loading, error };
+  return usePaginatedData<News, CardProps>('/api/news', mapNews, page, limit);
 }

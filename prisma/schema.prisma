@@ -28,12 +28,12 @@ model News {
 }
 
 model NewsBlock {
-  id                BigInt            @id @default(autoincrement())
+  id                BigInt           @id @default(autoincrement())
   news_id           BigInt
   title             String?
   content           String?
   order             BigInt
-  news              News              @relation(fields: [news_id], references: [id])
+  news              News             @relation(fields: [news_id], references: [id])
   news_block_images NewsBlockImage[]
 
   @@map("news_blocks")
@@ -45,29 +45,30 @@ model NewsBlockImage {
   image_id      BigInt
   order         BigInt
   news_block    NewsBlock @relation(fields: [news_block_id], references: [id])
-  image         Image    @relation(fields: [image_id], references: [id])
+  image         Image     @relation(fields: [image_id], references: [id])
 
   @@map("news_block_images")
 }
 
 model Image {
-  id                 BigInt              @id @default(autoincrement())
-  url                String
-  alt                String
-  created_at         DateTime            @default(now())
-  updated_at         DateTime            @updatedAt
-  deleted_at         DateTime?
+  id                      BigInt                   @id @default(autoincrement())
+  url                     String
+  alt                     String
+  created_at              DateTime                 @default(now())
+  updated_at              DateTime                 @updatedAt
+  deleted_at              DateTime?
   // This relation is required by Prisma to avoid validation error.
   // We DO NOT use this field in application code.
-  NewsBlockImages    NewsBlockImage[]
-  SermonsBlockImages SermonBlockImage[]
+  NewsBlockImages         NewsBlockImage[]
+  SermonsBlockImages      SermonBlockImage[]
+  AnnouncementBlockImages AnnouncementBlockImage[]
 
   @@map("images")
 }
 
 // Sermons
 model Sermon {
-  id            BigInt         @id @default(autoincrement())
+  id            BigInt        @id @default(autoincrement())
   title         String?
   preacher_name String?
   created_at    DateTime
@@ -79,23 +80,122 @@ model Sermon {
 }
 
 model SermonBlock {
-  id                 BigInt              @id @default(autoincrement())
-  sermon_id         BigInt
-  title              String?
-  content            String?
-  order              BigInt
-  sermon            Sermon              @relation(fields: [sermon_id], references: [id])
+  id                  BigInt             @id @default(autoincrement())
+  sermon_id           BigInt
+  title               String?
+  content             String?
+  order               BigInt
+  sermon              Sermon             @relation(fields: [sermon_id], references: [id])
   sermon_block_images SermonBlockImage[]
 
   @@map("sermon_blocks")
 }
 
 model SermonBlockImage {
-  id               BigInt       @id @default(autoincrement())
+  id              BigInt      @id @default(autoincrement())
   sermon_block_id BigInt
-  image_id         BigInt
-  order            BigInt
+  image_id        BigInt
+  order           BigInt
   sermon_block    SermonBlock @relation(fields: [sermon_block_id], references: [id])
-  image            Image       @relation(fields: [image_id], references: [id])
+  image           Image       @relation(fields: [image_id], references: [id])
+
   @@map("sermon_block_images")
+}
+
+// announcement
+
+model Announcement {
+  id                  BigInt              @id @default(autoincrement())
+  title               String?
+  status              Boolean
+  created_at          DateTime
+  updated_at          DateTime
+  deleted_at          DateTime?
+  announcement_blocks AnnouncementBlock[]
+
+  @@map("announcements")
+}
+
+model AnnouncementBlock {
+  id                        BigInt                   @id @default(autoincrement())
+  announcement_id           BigInt
+  content                   String?
+  order                     BigInt
+  announcement              Announcement             @relation(fields: [announcement_id], references: [id])
+  announcement_block_images AnnouncementBlockImage[]
+
+  @@map("announcement_blocks")
+}
+
+model AnnouncementBlockImage {
+  id                    BigInt            @id @default(autoincrement())
+  announcement_block_id BigInt
+  image_id              BigInt
+  order                 BigInt
+  announcement_block    AnnouncementBlock @relation(fields: [announcement_block_id], references: [id])
+  image                 Image             @relation(fields: [image_id], references: [id])
+
+  @@map("announcement_block_images")
+}
+
+model Contact {
+  id         BigInt    @id @default(autoincrement())
+  name       String
+  email      String
+  phone      String
+  created_at DateTime
+  updated_at DateTime
+  deleted_at DateTime?
+  @@map("contacts")
+}
+
+model MassSchedules {
+  id               BigInt    @id @default(autoincrement())
+  title            String
+  description      String
+  mass_date        DateTime
+  mass_time        DateTime
+  liturgical_color String?
+  first_reading    String?
+  second_reading   String?
+  celebrant        String?
+  created_at       DateTime
+  updated_at       DateTime
+  deleted_at       DateTime?
+  @@map("mass_schedules")
+}
+
+model User {
+  id         BigInt    @id @default(autoincrement())
+  name       String
+  email      String
+  password   String
+  role_id    BigInt
+  role       Role      @relation(fields: [role_id], references: [id])
+  created_at DateTime
+  updated_at DateTime
+  deleted_at DateTime?
+  @@map("users")
+}
+
+model Role {
+  id          BigInt    @id @default(autoincrement())
+  name        String
+  description String
+  created_at  DateTime
+  updated_at  DateTime
+  deleted_at  DateTime?
+  user        User[]
+  @@map("roles")
+}
+
+model Group {
+  id           BigInt    @id @default(autoincrement())
+  name         String
+  description  String
+  member_count BigInt
+  created_at   DateTime
+  updated_at   DateTime
+  deleted_at   DateTime?
+  @@map("groups")
 }
